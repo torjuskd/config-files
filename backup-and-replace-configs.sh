@@ -14,7 +14,7 @@ FILENAME=configbackup-$(date "+%y-%m-%d_%H.%M.%S").tgz
 mkdir -p $DESTDIR 
 tar -cvf $DESTDIR/$FILENAME $SRCDIR/.emacs $SRCDIR/.bashrc $SRCDIR/.vimrc #Add more files to back up here if you want.
  
-cp $CONFIGDIR/.* $SRCDIR
+cp -i -v $CONFIGDIR/.* $SRCDIR
 #cp emacs $SRCDIR/.emacs #Can add flag -i for interactive replacing.
 #cp bashrc $SRCDIR/.bashrc
 #cp vimrc $SRCDIR/.vimrc
