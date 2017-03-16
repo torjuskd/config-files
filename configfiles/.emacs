@@ -271,7 +271,12 @@ given, the duplicated region will be commented out."
 
 ;; Latex setup
 
-(pdf-tools-install) ; pdf-tools to start automatically
+(when (eq system-type 'gnu/linux) 
+  (pdf-tools-install) ; pdf-tools to start automatically (nice PDF viewer)
+  (setq TeX-view-program-selection '((output-pdf "pdf-tools")))
+  (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
+
+; (pdf-tools-install) ; pdf-tools to start automatically
 (latex-preview-pane-enable) ; Should open preview pane automatically, else use "M-x latex-preview-pane-mode".
 
 ;; .tex-files should be associated with latex-mode instead of tex-mode.
