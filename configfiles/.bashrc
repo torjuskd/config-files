@@ -1,10 +1,44 @@
-# Denne filen blir utf|rt ved oppstart av alle nye shell (bash),
-# ogs} de som ikke er interaktive.
+# This file is normally read by interactive shells only.
+# Here is the place to define your aliases, functions and
+# other interactive features like your prompt.
 
-# Utf|r f|rst den globale bashrc-filen.  IKKE kopier inn den filen, da er
-# du n{rmest garantert at ting vil slutte } virke n}r det er n|dvendig }
-# gj|re endringer.  Du kan gj|re egne ting etter at den globale bashrc er
-# utf|rt.
+# Execution sequence of files:
+# /etc/profile
+# ~/.bash_profile
+# ~/.bashrc
+# ~/.bash_login
+# ~/.profile
+# ~/.bash_logout
+
+# Pseudocode explaining execution order:
+
+# execute /etc/profile
+# IF ~/.bash_profile exists THEN
+#     execute ~/.bash_profile
+# ELSE
+#     IF ~/.bash_login exist THEN
+#         execute ~/.bash_login
+#     ELSE
+#         IF ~/.profile exist THEN
+#             execute ~/.profile
+#         END IF
+#     END IF
+# END IF
+
+# On logout:
+
+# IF ~/.bash_logout exists THEN
+#     execute ~/.bash_logout
+# END IF
+
+# While launching a non-login interactive shell, following is the sequence of execution:
+
+# IF ~/.bashrc exists THEN
+#     execute ~/.bashrc
+# END IF
+
+USERNAME=$(whoami)
+UIOBRUKER="torjuskd"
 
 # Bare utfør hvis logget på UiO-bruker
 if [ $(whoami) = "torjuskd" ]; then
@@ -34,6 +68,7 @@ fi
 
 #fin kommando for ssh + laste in bashrc-fil :)
 alias sshuio='ssh -YC torjuskd@login.ifi.uio.no; source ~/.bashrc'
+alias sshuiobruker='ssh -YC '$UIOBRUKER'@login.ifi.uio.no; source ~/.bashrc'
 alias age='~torgeiou/age fs'
 alias sql='psql -h dbpg-ifi-kurs -U torjuskd'
 alias filmsql='psql -h dbpg-ifi-kurs -U torjuskd -d fdb'
