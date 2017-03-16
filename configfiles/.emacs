@@ -4,30 +4,36 @@
 
 ;; add mirrors for list-packages
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+			 ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 ;; needed to use things downloaded with the package manager
 (package-initialize)
 
 
 ;; install some packages if missing
-(let* ((packages '(ac-geiser         ; Auto-complete backend for geiser
-		   auto-complete
-                   auto-complete     ; auto completion
-                   geiser            ; GNU Emacs and Scheme talk to each other
-                   ido-vertical-mode
-                   monokai-theme
-                   multiple-cursors
-                   paredit           ; minor mode for editing parentheses
+(let* ((packages '(ac-geiser                ; Auto-complete backend for geiser
+		   auto-complete            ; auto completion
+		   geiser                   ; GNU Emacs and Scheme talk to each other
+		   ido-vertical-mode
+		   multiple-cursors
+		   paredit                  ; minor mode for editing parentheses
 		   pdf-tools
-                   pretty-lambdada
+		   ;ox-latex                 ; the latex-exporter (from org)
+		   ;ox-md                    ; Markdown exporter (from org)
+		   pretty-lambdada          ; `lambda' as the Greek letter.
 		   try
-                   undo-tree)) ; `lambda' as the Greek letter.
+		   undo-tree
+		   monokai-theme
+		   molokai-theme
+		   solarized-theme
+		   zenburn-theme
+		   ))
        (packages (remove-if 'package-installed-p packages)))
   (when packages
     (package-refresh-contents)
     (mapc 'package-install packages)))
 
+(pdf-tools-install)
 
 ;; START Scheme-setup
 
@@ -62,6 +68,83 @@
 ;; END Scheme-setup
 
 
+;; Latex setup
+
+;; .tex-files should be associated with latex-mode instead of tex-mode.
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+
+;; Use biblatex for bibliography.
+(setq-default bibtex-dialect 'biblatex)
+
+;; I like using the Minted package for source blocks in LaTeX. To make org use this we add the following snippet.
+
+(eval-after-load 'org
+  '(add-to-list 'org-latex-packages-alist '("" "minted")))
+(setq org-latex-listings 'minted)
+
+;; Because Minted uses Pygments (an external process),
+;; we must add the -shell-escape option to the org-latex-pdf-process commands.
+;; The tex-compile-commands variable controls the default compile command for Tex- and LaTeX-mode,
+;; we can add the flag with a rather dirty statement (if anyone finds a nicer way to do this, please let me know).
+(eval-after-load 'tex-mode
+  '(setcar (cdr (cddaar tex-compile-commands)) " -shell-escape "))
+
+;; When exporting from Org to LaTeX, use latexmk for compilation.
+(eval-after-load 'ox-latex
+  '(setq org-latex-pdf-process
+	 '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f")))
+
+;; For my thesis, I need to use our university’s LaTeX class, this snippet makes that class available.
+(eval-after-load "ox-latex"
+  '(progn
+     (add-to-list 'org-latex-classes
+		  '("ifimaster"
+		    "\\documentclass{ifimaster}
+[DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]
+\\usepackage{babel,csquotes,ifimasterforside,url,varioref}"
+		   ("\\chapter{%s}" . "\\chapter*{%s}")
+		   ("\\section{%s}" . "\\section*{%s}")
+		   ("\\subsection{%s}" . "\\subsection*{%s}")
+		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    (custom-set-variables '(org-export-allow-bind-keywords t))))
+
+;; End Latex setup
+
+;; Markdown setup
+
+;; This makes .md-files open in markdown-mode.
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+;; I sometimes use a specialized markdown format, where inline math-blocks
+;; can be achieved by surrounding a LaTeX formula with $math$ and $/math$.
+;; Writing these out became tedious, so I wrote a small function.
+(defun insert-markdown-inline-math-block ()
+  "Inserts an empty math-block if no region is active, otherwise wrap a
+math-block around the region."
+  (interactive)
+  (let* ((beg (region-beginning))
+	 (end (region-end))
+	 (body (if (region-active-p) (buffer-substring beg end) "")))
+    (when (region-active-p)
+      (delete-region beg end))
+    (insert (concat "$math$ " body " $/math$"))
+    (search-backward " $/math$")))
+
+;; Most of my writing in this markup is in Norwegian, so the dictionary is set accordingly.
+;; The markup is also sensitive to line breaks, so auto-fill-mode is disabled.
+;; Of course we want to bind our lovely function to a key!
+(add-hook 'markdown-mode-hook
+	  (lambda ()
+	    (auto-fill-mode 0)
+	    (visual-line-mode 1)
+	    (ispell-change-dictionary "norsk")
+	    (local-set-key (kbd "C-c b") 'insert-markdown-inline-math-block)) t)
+
+;; End Markdown setup
 
 ;; enable system-copy
 (setq x-select-enable-clipboard t)
@@ -69,7 +152,7 @@
 ;; no splash screen
 (setq inhibit-splash-screen t)
 
-;; La *scratch*-bufferen v�re tom.
+;; La *scratch*-bufferen være tom.
 (setq initial-scratch-message nil)
 
 ;; show matching parenthesis
@@ -177,7 +260,7 @@
   "Ident, untabify and unwhitespacify current buffer, or region if active."
   (interactive)
   (let ((beg (if (region-active-p) (region-beginning) (point-min)))
-        (end (if (region-active-p) (region-end)       (point-max))))
+	(end (if (region-active-p) (region-end)       (point-max))))
     (whitespace-cleanup)
     (indent-region beg end nil)
     (untabify beg end)))
@@ -188,10 +271,10 @@ given, the duplicated region will be commented out."
   (interactive "P")
   (save-excursion
     (let ((start (if (region-active-p) (region-beginning) (point-at-bol)))
-          (end   (if (region-active-p) (region-end) (point-at-eol))))
+	  (end   (if (region-active-p) (region-end) (point-at-eol))))
       (goto-char end)
       (unless (region-active-p)
-        (newline))
+	(newline))
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
 
@@ -205,18 +288,18 @@ given, the duplicated region will be commented out."
   "Renames current buffer and file it is visiting."
   (interactive)
   (let ((name (buffer-name))
-        (filename (buffer-file-name)))
+	(filename (buffer-file-name)))
     (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name)
+	(error "Buffer '%s' is not visiting a file!" name)
       (let ((new-name (read-file-name "New name: " filename)))
-        (cond ((get-buffer new-name)
-               (error "A buffer named '%s' already exists!" new-name))
-              (t
-               (rename-file filename new-name 1)
-               (rename-buffer new-name)
-               (set-visited-file-name new-name)
-               (set-buffer-modified-p nil)
-               (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
+	(cond ((get-buffer new-name)
+	       (error "A buffer named '%s' already exists!" new-name))
+	      (t
+	       (rename-file filename new-name 1)
+	       (rename-buffer new-name)
+	       (set-visited-file-name new-name)
+	       (set-buffer-modified-p nil)
+	       (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
 
 (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
 
