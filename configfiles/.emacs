@@ -18,8 +18,10 @@
 		   multiple-cursors
 		   paredit                  ; minor mode for editing parentheses
 		   pdf-tools
-		   ;ox-latex                 ; the latex-exporter (from org)
-		   ;ox-md                    ; Markdown exporter (from org)
+		   latex-preview-pane       ; minor mode, preview your LaTeX files directly in Emacs
+		   auctex                   ; extensible package for writing and formatting TeX files
+		   ;ox-latex                ; the latex-exporter (from org)
+		   ;ox-md                   ; Markdown exporter (from org)
 		   pretty-lambdada          ; `lambda' as the Greek letter.
 		   try
 		   undo-tree
@@ -27,124 +29,13 @@
 		   molokai-theme
 		   solarized-theme
 		   zenburn-theme
+		   leuven-theme
+		   material-theme
 		   ))
        (packages (remove-if 'package-installed-p packages)))
   (when packages
     (package-refresh-contents)
     (mapc 'package-install packages)))
-
-(pdf-tools-install)
-
-;; START Scheme-setup
-
-;; We use racket.
-(setq geiser-active-implementations '(racket))
-
-;; Visualize matching parentheses.
-(show-paren-mode 1)
-
-;; Make sure these features are loaded.
-(require 'auto-complete-config)
-(require 'ac-geiser)
-
-;; Standard auto-complete setup.
-(ac-config-default)
-
-;; ac-geiser recommended setup.
-(add-hook 'geiser-mode-hook 'ac-geiser-setup)
-(add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'geiser-repl-mode))
-
-;; pretty-lambdada setup.
-(add-to-list 'pretty-lambda-auto-modes 'geiser-repl-mode)
-(pretty-lambda-for-modes)
-
-;; Loop the pretty-lambda-auto-modes list.
-(dolist (mode pretty-lambda-auto-modes)
-  ;; add paredit-mode to all mode-hooks
-  (add-hook (intern (concat (symbol-name mode) "-hook")) 'paredit-mode))
-
-;; END Scheme-setup
-
-
-;; Latex setup
-
-;; .tex-files should be associated with latex-mode instead of tex-mode.
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
-
-;; Use biblatex for bibliography.
-(setq-default bibtex-dialect 'biblatex)
-
-;; I like using the Minted package for source blocks in LaTeX. To make org use this we add the following snippet.
-
-(eval-after-load 'org
-  '(add-to-list 'org-latex-packages-alist '("" "minted")))
-(setq org-latex-listings 'minted)
-
-;; Because Minted uses Pygments (an external process),
-;; we must add the -shell-escape option to the org-latex-pdf-process commands.
-;; The tex-compile-commands variable controls the default compile command for Tex- and LaTeX-mode,
-;; we can add the flag with a rather dirty statement (if anyone finds a nicer way to do this, please let me know).
-(eval-after-load 'tex-mode
-  '(setcar (cdr (cddaar tex-compile-commands)) " -shell-escape "))
-
-;; When exporting from Org to LaTeX, use latexmk for compilation.
-(eval-after-load 'ox-latex
-  '(setq org-latex-pdf-process
-	 '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f")))
-
-;; For my thesis, I need to use our university’s LaTeX class, this snippet makes that class available.
-(eval-after-load "ox-latex"
-  '(progn
-     (add-to-list 'org-latex-classes
-		  '("ifimaster"
-		    "\\documentclass{ifimaster}
-[DEFAULT-PACKAGES]
-[PACKAGES]
-[EXTRA]
-\\usepackage{babel,csquotes,ifimasterforside,url,varioref}"
-		   ("\\chapter{%s}" . "\\chapter*{%s}")
-		   ("\\section{%s}" . "\\section*{%s}")
-		   ("\\subsection{%s}" . "\\subsection*{%s}")
-		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		   ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    (custom-set-variables '(org-export-allow-bind-keywords t))))
-
-;; End Latex setup
-
-;; Markdown setup
-
-;; This makes .md-files open in markdown-mode.
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-
-;; I sometimes use a specialized markdown format, where inline math-blocks
-;; can be achieved by surrounding a LaTeX formula with $math$ and $/math$.
-;; Writing these out became tedious, so I wrote a small function.
-(defun insert-markdown-inline-math-block ()
-  "Inserts an empty math-block if no region is active, otherwise wrap a
-math-block around the region."
-  (interactive)
-  (let* ((beg (region-beginning))
-	 (end (region-end))
-	 (body (if (region-active-p) (buffer-substring beg end) "")))
-    (when (region-active-p)
-      (delete-region beg end))
-    (insert (concat "$math$ " body " $/math$"))
-    (search-backward " $/math$")))
-
-;; Most of my writing in this markup is in Norwegian, so the dictionary is set accordingly.
-;; The markup is also sensitive to line breaks, so auto-fill-mode is disabled.
-;; Of course we want to bind our lovely function to a key!
-(add-hook 'markdown-mode-hook
-	  (lambda ()
-	    (auto-fill-mode 0)
-	    (visual-line-mode 1)
-	    (ispell-change-dictionary "norsk")
-	    (local-set-key (kbd "C-c b") 'insert-markdown-inline-math-block)) t)
-
-;; End Markdown setup
 
 ;; enable system-copy
 (setq x-select-enable-clipboard t)
@@ -195,9 +86,6 @@ math-block around the region."
 ;; answer with y/n
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; choose a color-theme
-(load-theme 'monokai t)
-
 ;; get the default config for auto-complete (downloaded with
 ;; package-manager)
 (require 'auto-complete-config)
@@ -207,6 +95,21 @@ math-block around the region."
 
 ;; kills the active buffer, not asking what buffer to kill.
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
+
+;; choose a color-theme
+(load-theme 'material t)
+
+;; function to cycle between themes
+(defun cycle-themes ()
+  "Returns a function that lets you cycle your themes."
+  (lexical-let ((themes '#1=(leuven material . #1#)))
+    (lambda ()
+      (interactive)
+      ;; Rotates the thme cycle and changes the current theme.
+      (load-theme (car (setq themes (cdr themes))) t))))
+
+;; Changing themes
+(global-set-key (kbd "C-c C-t") (cycle-themes))
 
 ;; adds all autosave-files (i.e #test.txt#, test.txt~) in one
 ;; directory, avoid clutter in filesystem.
@@ -362,3 +265,120 @@ given, the duplicated region will be commented out."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;More specific setups are placed here near the end of the file.
+
+
+;; Latex setup
+
+(pdf-tools-install) ; pdf-tools to start automatically
+(latex-preview-pane-enable) ; Should open preview pane automatically, else use "M-x latex-preview-pane-mode".
+
+;; .tex-files should be associated with latex-mode instead of tex-mode.
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+
+;; Use biblatex for bibliography.
+(setq-default bibtex-dialect 'biblatex)
+
+;; I like using the Minted package for source blocks in LaTeX. To make org use this we add the following snippet.
+
+(eval-after-load 'org
+  '(add-to-list 'org-latex-packages-alist '("" "minted")))
+(setq org-latex-listings 'minted)
+
+;; Because Minted uses Pygments (an external process),
+;; we must add the -shell-escape option to the org-latex-pdf-process commands.
+;; The tex-compile-commands variable controls the default compile command for Tex- and LaTeX-mode,
+;; we can add the flag with a rather dirty statement (if anyone finds a nicer way to do this, please let me know).
+(eval-after-load 'tex-mode
+  '(setcar (cdr (cddaar tex-compile-commands)) " -shell-escape "))
+
+;; When exporting from Org to LaTeX, use latexmk for compilation.
+(eval-after-load 'ox-latex
+  '(setq org-latex-pdf-process
+	 '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f")))
+
+;; For my thesis, I need to use our university’s LaTeX class, this snippet makes that class available.
+(eval-after-load "ox-latex"
+  '(progn
+     (add-to-list 'org-latex-classes
+		  '("ifimaster"
+		    "\\documentclass{ifimaster}
+[DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]
+\\usepackage{babel,csquotes,ifimasterforside,url,varioref}"
+		   ("\\chapter{%s}" . "\\chapter*{%s}")
+		   ("\\section{%s}" . "\\section*{%s}")
+		   ("\\subsection{%s}" . "\\subsection*{%s}")
+		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+		   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    (custom-set-variables '(org-export-allow-bind-keywords t))))
+
+;; End Latex setup
+
+;; Markdown setup
+
+;; This makes .md-files open in markdown-mode.
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+;; I sometimes use a specialized markdown format, where inline math-blocks
+;; can be achieved by surrounding a LaTeX formula with $math$ and $/math$.
+;; Writing these out became tedious, so I wrote a small function.
+(defun insert-markdown-inline-math-block ()
+  "Inserts an empty math-block if no region is active, otherwise wrap a
+math-block around the region."
+  (interactive)
+  (let* ((beg (region-beginning))
+	 (end (region-end))
+	 (body (if (region-active-p) (buffer-substring beg end) "")))
+    (when (region-active-p)
+      (delete-region beg end))
+    (insert (concat "$math$ " body " $/math$"))
+    (search-backward " $/math$")))
+
+;; Most of my writing in this markup is in Norwegian, so the dictionary is set accordingly.
+;; The markup is also sensitive to line breaks, so auto-fill-mode is disabled.
+;; Of course we want to bind our lovely function to a key!
+(add-hook 'markdown-mode-hook
+	  (lambda ()
+	    (auto-fill-mode 0)
+	    (visual-line-mode 1)
+	    (ispell-change-dictionary "norsk")
+	    (local-set-key (kbd "C-c b") 'insert-markdown-inline-math-block)) t)
+
+;; End Markdown setup
+
+
+;; START Scheme-setup
+
+;; We use racket.
+(setq geiser-active-implementations '(racket))
+
+;; Visualize matching parentheses.
+(show-paren-mode 1)
+
+;; Make sure these features are loaded.
+(require 'auto-complete-config)
+(require 'ac-geiser)
+
+;; Standard auto-complete setup.
+(ac-config-default)
+
+;; ac-geiser recommended setup.
+(add-hook 'geiser-mode-hook 'ac-geiser-setup)
+(add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'geiser-repl-mode))
+
+;; pretty-lambdada setup.
+(add-to-list 'pretty-lambda-auto-modes 'geiser-repl-mode)
+(pretty-lambda-for-modes)
+
+;; Loop the pretty-lambda-auto-modes list.
+(dolist (mode pretty-lambda-auto-modes)
+  ;; add paredit-mode to all mode-hooks
+  (add-hook (intern (concat (symbol-name mode) "-hook")) 'paredit-mode))
+
+;; END Scheme-setup
