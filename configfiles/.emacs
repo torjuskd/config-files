@@ -4,7 +4,7 @@
 
 ;; add mirrors for list-packages
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 ;; needed to use things downloaded with the package manager
 (package-initialize)
@@ -13,16 +13,16 @@
 ;; install some packages if missing
 (let* ((packages '(ac-geiser         ; Auto-complete backend for geiser
 		   auto-complete
-		   auto-complete     ; auto completion
-		   geiser            ; GNU Emacs and Scheme talk to each other
-		   ido-vertical-mode
-		   monokai-theme
-		   multiple-cursors
-		   paredit           ; minor mode for editing parentheses
+                   auto-complete     ; auto completion
+                   geiser            ; GNU Emacs and Scheme talk to each other
+                   ido-vertical-mode
+                   monokai-theme
+                   multiple-cursors
+                   paredit           ; minor mode for editing parentheses
 		   pdf-tools
-		   pretty-lambdada
+                   pretty-lambdada
 		   try
-		   undo-tree)) ; `lambda' as the Greek letter.
+                   undo-tree)) ; `lambda' as the Greek letter.
        (packages (remove-if 'package-installed-p packages)))
   (when packages
     (package-refresh-contents)
@@ -69,7 +69,7 @@
 ;; no splash screen
 (setq inhibit-splash-screen t)
 
-;; La *scratch*-bufferen være tom.
+;; La *scratch*-bufferen v�re tom.
 (setq initial-scratch-message nil)
 
 ;; show matching parenthesis
@@ -177,7 +177,7 @@
   "Ident, untabify and unwhitespacify current buffer, or region if active."
   (interactive)
   (let ((beg (if (region-active-p) (region-beginning) (point-min)))
-	(end (if (region-active-p) (region-end)       (point-max))))
+        (end (if (region-active-p) (region-end)       (point-max))))
     (whitespace-cleanup)
     (indent-region beg end nil)
     (untabify beg end)))
@@ -188,10 +188,10 @@ given, the duplicated region will be commented out."
   (interactive "P")
   (save-excursion
     (let ((start (if (region-active-p) (region-beginning) (point-at-bol)))
-	  (end   (if (region-active-p) (region-end) (point-at-eol))))
+          (end   (if (region-active-p) (region-end) (point-at-eol))))
       (goto-char end)
       (unless (region-active-p)
-	(newline))
+        (newline))
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
 
@@ -205,53 +205,77 @@ given, the duplicated region will be commented out."
   "Renames current buffer and file it is visiting."
   (interactive)
   (let ((name (buffer-name))
-	(filename (buffer-file-name)))
+        (filename (buffer-file-name)))
     (if (not (and filename (file-exists-p filename)))
-	(error "Buffer '%s' is not visiting a file!" name)
+        (error "Buffer '%s' is not visiting a file!" name)
       (let ((new-name (read-file-name "New name: " filename)))
-	(cond ((get-buffer new-name)
-	       (error "A buffer named '%s' already exists!" new-name))
-	      (t
-	       (rename-file filename new-name 1)
-	       (rename-buffer new-name)
-	       (set-visited-file-name new-name)
-	       (set-buffer-modified-p nil)
-	       (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
+        (cond ((get-buffer new-name)
+               (error "A buffer named '%s' already exists!" new-name))
+              (t
+               (rename-file filename new-name 1)
+               (rename-buffer new-name)
+               (set-visited-file-name new-name)
+               (set-buffer-modified-p nil)
+               (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
 
 (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
-(pdf-tools-install)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
+ '(compilation-message-face (quote default))
+ '(custom-safe-themes
+   (quote
+    ("f81a9aabc6a70441e4a742dfd6d10b2bae1088830dc7aba9c9922f4b1bd2ba50" default)))
+ '(fci-rule-color "#3C3D37")
+ '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-tail-colors
+   (quote
+    (("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100))))
+ '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (pdf-tools exec-path-from-shell undo-tree try pretty-lambdada paredit multiple-cursors monokai-theme ido-vertical-mode ac-geiser))))
+    (pdf-tools exec-path-from-shell undo-tree try pretty-lambdada paredit multiple-cursors monokai-theme ido-vertical-mode ac-geiser)))
+ '(pos-tip-background-color "#A6E22E")
+ '(pos-tip-foreground-color "#272822")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#F92672")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#E6DB74")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#A6E22E")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#A1EFE4")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#66D9EF"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-
-;;Some back up stuff
-;; This will all place all auto-saves and backups in the directory pointed to by temporary-file-directory (e.g., C:/Temp/ on Windows).
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-
-;; If you visit the backup directory from time to time to retrieve an old file version then it’s a good idea to prevent the directory from cluttering up with very old backup files.
-;; Automatically purge backup files not accessed in a week:
-(message "Deleting old backup files...")
-(let ((week (* 60 60 24 7))
-      (current (float-time (current-time))))
-  (dolist (file (directory-files temporary-file-directory t))
-    (when (and (backup-file-name-p file)
-               (> (- current (float-time (fifth (file-attributes file))))
-                  week))
-      (message "%s" file)
-      (delete-file file))))
