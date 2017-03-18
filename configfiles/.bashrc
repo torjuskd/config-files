@@ -66,6 +66,17 @@ fi
 
 # Her kan du definere egne alias'er og sette bash-spesifikke variable.
 
+# Warning: Potentially dangerous:
+# Sometimes drive won't mount in linux if hibernated or fast boot is enabled, fix:
+function fixhibernateddrive {
+    if [ $# -eq 0 ] #Check if no argument is specified - use default.
+        then
+            sudo ntfsfix "/dev/sda1" # relevant windows partition to default to.
+        else
+            sudo ntfsfix $1 #else, let the user supply partition.
+    fi
+}
+
 #fin kommando for ssh + laste in bashrc-fil :)
 alias sshuio='ssh -YC torjuskd@login.ifi.uio.no; source ~/.bashrc'
 alias sshuiobruker='ssh -YC '$UIOBRUKER'@login.ifi.uio.no; source ~/.bashrc'
@@ -180,6 +191,10 @@ alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
 
 ## Get server cpu info ##
 alias cpuinfo='lscpu'
+
+## List disk/partition info
+alias diskinfo='sudo fdisk -l'
+alias lsdisk='diskinfo'
 
 ## older system use /proc/cpuinfo ##
 ##alias cpuinfo='less /proc/cpuinfo' ##
