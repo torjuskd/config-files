@@ -43,7 +43,7 @@
 ;; no splash screen
 (setq inhibit-splash-screen t)
 
-;; La *scratch*-bufferen vÃ¦re tom.
+;; La *scratch*-bufferen være tom.
 (setq initial-scratch-message nil)
 
 ;; show matching parenthesis
@@ -303,7 +303,7 @@ given, the duplicated region will be commented out."
   '(setq org-latex-pdf-process
 	 '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f")))
 
-;; For my thesis, I need to use our universityâ€™s LaTeX class, this snippet makes that class available.
+;; For my thesis, I need to use our university’s LaTeX class, this snippet makes that class available.
 (eval-after-load "ox-latex"
   '(progn
      (add-to-list 'org-latex-classes
@@ -387,3 +387,23 @@ math-block around the region."
   (add-hook (intern (concat (symbol-name mode) "-hook")) 'paredit-mode))
 
 ;; END Scheme-setup
+
+
+;; Fonts and jokes
+;; defining a function that sets the font to diablo light, for purposes of fun.
+(defun diablo ()
+  (lambda () (interactive)
+    (custom-set-faces
+     '(default ((t (:family "DIABLO LIGHT"))))
+     )))
+
+(global-set-key (kbd "C-c C-d") (diablo))
+
+;; Function that resets font to normal (at least in windows?)
+(defun default-font ()
+  (lambda () (interactive)
+    (custom-set-faces
+     '(default ((t (:family "Segoe UI"))))
+     )))
+
+(global-set-key (kbd "C-c C-f") (default-font))
