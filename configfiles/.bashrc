@@ -228,3 +228,6 @@ setxkbmap -option "caps:ctrl_modifier"
 
 #SCP - funker ikke helt, bør skrives om en vakker dag.
 alias downloadscp='scp torjuskd@login.ifi.uio.no:' #(fulgt av remote/host/file local/folder) (eg: ~/.emacs ~/.emacs)
+
+#Look at syslogs - most info rich log in a system.
+alias syslogs='less /var/log/syslog'
