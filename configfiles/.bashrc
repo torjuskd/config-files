@@ -231,3 +231,6 @@ alias downloadscp='scp torjuskd@login.ifi.uio.no:' #(fulgt av remote/host/file l
 
 #Look at syslogs - most info rich log in a system.
 alias syslogs='less /var/log/syslog'
+
+#search for installed application
+alias searchforinstalled='dpkg -l | grep' # followed by application name
