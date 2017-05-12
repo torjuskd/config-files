@@ -18,7 +18,7 @@
 * Som student har du tilgang på [Github Student Developer Pack](https://education.github.com/pack).
 * Tilgang til Jetbrains gratis [her](https://www.jetbrains.com/student/). Inkluderer bl.a. IDEene IntelliJ (Java), PyCharm(Python) og CLion (C).
 
-Lånte info fra, [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), for å slippe å logge på UiO-git.
+Lånte info fra [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), og kopierte hit for å slippe å logge på UiO-git.
 
 
 ## This repo
