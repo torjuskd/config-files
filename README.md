@@ -5,7 +5,7 @@
 * Send filer av ubegrenset størrelse via e-post: [filesender.uio.no](https://filesender.uio.no/).
 * Skylagring med 50 GB: [disk.uio.no](https://disk.uio.no/).
 * UiO github med ubegrenset antall private repositories: [github.uio.no](https://github.uio.no/).
-* Gratis Microsoft Windows og annet Microsoft-programvare: [termvakt.uio.no/E-Academy](http://termvakt.uio.no/E-Academy).
+* Gratis Microsoft Windows og annet Microsoft-programvare, les Visual Studio: [termvakt.uio.no/E-Academy](http://termvakt.uio.no/E-Academy).
 * Gratis MATLAB nedlasting (med mye tilhørende biblioteker tilgjengelig), howto-guide på denne [mat1110-siden](http://www.uio.no/studier/emner/matnat/math/MAT1110/v16/programmering.html)
 * UiO programkiosk, programvare i skyen (blant annet Adobe Illustrator, Adobe Photoshop, MATLAB, Word, Excel): [view.uio.no](https://view.uio.no/).
 * UiO programvare, last ned program til egen maskin: [app.uio.no/programvare](https://app.uio.no/programvare/).
