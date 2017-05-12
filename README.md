@@ -1,5 +1,5 @@
-# Snacks
-## Studentfordeler og tips
+# Snacks og studentfordeler
+## Studentfordeler
 ### Fra UiO
 
 * Send filer av ubegrenset størrelse via e-post: [filesender.uio.no](https://filesender.uio.no/).
@@ -21,8 +21,11 @@
 
 Lånte info fra [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), og kopierte hit for å slippe å logge på UiO-git.
 
+### Tips
+* Skal du laste ned python, men ønsker ikke å stresse med pakker etterpå? Sjekk ut [Anaconda](https://www.continuum.io/downloads)
+* Du får også ubegrenset antall private repoer gjennom [Github Student Developer Pack](https://education.github.com/pack), men de er ikke begrenset til kun UiO brukere - som er en fordel om du ønsker å dele kode med veileder eller andre.
 
-## This repo
+## This repo - snacks
 * config files 
 * scripts
 * nice info and cheatsheets
