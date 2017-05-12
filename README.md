@@ -26,6 +26,7 @@ Stjal mye info fra [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), kopierte
 * Skal du laste ned python, men ønsker ikke å stresse med pakker etterpå? Sjekk ut [Anaconda](https://www.continuum.io/downloads)
 * Du får også ubegrenset antall private repoer gjennom [Github Student Developer Pack](https://education.github.com/pack), men de er ikke begrenset til kun UiO brukere - som er en fordel om du ønsker å dele kode med veileder eller andre.
 * Lifehack: Tren på SiO Athletica for 169 kr per måned m/ bindingstid i 12 måneder (altså totalt 2028 kr i året).
+* Skal du skrive en seriøs oppgave, og trenger noe kraftigere enn Google Docs og MS Word? Sjekk ut [LaTeX](http://termvakt.uio.no/LaTeX). Noen greie skyplatformer for LaTeX er [Overleaf](https://www.overleaf.com/) eller [Sharelatex](https://www.sharelatex.com/), (de har begge git-integrasjon). Om du ikke liker LaTeX, men er glad i Emacs er kanskje [Org mode](http://orgmode.org/) noe for deg.
 
 ## This repo - snacks
 * config files 
