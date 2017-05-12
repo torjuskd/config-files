@@ -20,7 +20,7 @@
 * Tilgang til Jetbrains gratis [her](https://www.jetbrains.com/student/). Inkluderer bl.a. IDEene IntelliJ (Java), PyCharm(Python) og CLion (C).
 * Det er masse tilgjengelige rabatter og tilbud gjennom [Studenttorget](http://studenttorget.no/studentrabatter/)
 
-Stjal mye info fra [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), kopierte det hit og lag til litt egne forslag. Nå kan du og jeg ha dette tilgjengelig uten å logge på UiOs github.
+Stjal mye info fra [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), kopierte det hit og la til litt egne forslag. Nå kan du og jeg ha dette tilgjengelig uten å logge på UiOs github.
 
 ### Tips
 * Skal du laste ned python, men ønsker ikke å stresse med pakker etterpå? Sjekk ut [Anaconda](https://www.continuum.io/downloads)
