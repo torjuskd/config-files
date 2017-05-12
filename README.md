@@ -25,7 +25,7 @@ Lånte info fra [mikaeo](https://github.uio.no/mikaeo/uio_goodies/), og kopierte
 ### Tips
 * Skal du laste ned python, men ønsker ikke å stresse med pakker etterpå? Sjekk ut [Anaconda](https://www.continuum.io/downloads)
 * Du får også ubegrenset antall private repoer gjennom [Github Student Developer Pack](https://education.github.com/pack), men de er ikke begrenset til kun UiO brukere - som er en fordel om du ønsker å dele kode med veileder eller andre.
-* Lifehack: tren på SiO Athletica for 169 kr per måned m/ bindingstid i 12 måneder (altså totalt 2028 kr i året).
+* Lifehack: Tren på SiO Athletica for 169 kr per måned m/ bindingstid i 12 måneder (altså totalt 2028 kr i året).
 
 ## This repo - snacks
 * config files 
