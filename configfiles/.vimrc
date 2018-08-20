@@ -30,8 +30,15 @@ set shiftwidth=4               " indent 4 spaces at a time
 set expandtab                  " insert spaces when indenting with tabs
 set backspace=indent,eol,start " Allow backspacing of these
 set splitbelow splitright      " Open new splits below and to the right
+set clipboard=unnamedplus      " Set clipboard to default clipboard
 
-colorscheme default            " set your colorscheme here!
+" Vim commands such as :yank or :paste operate with the unnamed register, which by 
+" default corresponds to the \"* register. If the +clipboard feature is available, the \"* register is reflected to the PRIMARY buffer in X.
+
+" To change the default register, you can :set clipboard=unnamedplus to use the \"+ register instead. The \"+ register corresponds to the CLIPBOARD buffer in X. 
+
+
+colorscheme slate " set your colorscheme here!
 
 " Try these options if you have issues with colors in the terminal
 " set t_ut=
@@ -97,3 +104,4 @@ call plug#begin('~/.vim/plugged')
                             
 
 call plug#end()
+
